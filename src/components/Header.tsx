@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import React from "react";
 
@@ -10,8 +9,8 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   return (
     <header className="app-header">
       <div className="container header-content">
-        <Link href="/" legacyBehavior>
-          <div className="logo">NextGen Blog</div>
+        <Link href="/">
+          <div className="logo">Think Scribble</div>
         </Link>
         <div className="search-bar">
           <input

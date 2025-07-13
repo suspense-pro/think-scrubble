@@ -1,57 +1,49 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+'use client';
+import React, { useState } from 'react';
+import { Blog } from '@/lib/data';
+import { ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
 
-import React, { useState } from "react";
-import { Blog } from "../lib/data";
-
-type LikeDislikeProps = {
-  post: Pick<Blog, "likes" | "dislikes">;
+type Props = {
+  post: Blog;
 };
 
-const LikeDislike: React.FC<LikeDislikeProps> = ({ post }) => {
-  const [likes, setLikes] = useState(post.likes);
-  const [dislikes, setDislikes] = useState(post.dislikes);
-  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
+const LikeDislike = ({ post }: Props) => {
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
 
-  const handleLike = () => {
-    if (userVote === "like") {
-      setLikes(likes - 1);
-      setUserVote(null);
-    } else {
-      setLikes(likes + 1);
-      if (userVote === "dislike") setDislikes(dislikes - 1);
-      setUserVote("like");
-    }
-  };
+  const handleLike = () => setLikes(likes + 1);
+  const handleDislike = () => setDislikes(dislikes + 1);
 
-  const handleDislike = () => {
-    if (userVote === "dislike") {
-      setDislikes(dislikes - 1);
-      setUserVote(null);
-    } else {
-      setDislikes(dislikes + 1);
-      if (userVote === "like") setLikes(likes - 1);
-      setUserVote("dislike");
+  const handleShare = (platform: string) => {
+    const url = window.location.href;
+    const text = `Check out this article: ${post.title}`;
+    let shareUrl = '';
+
+    switch (platform) {
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        break;
     }
+
+    if (shareUrl) window.open(shareUrl, '_blank');
   };
 
   return (
-    <div className="toolbar-group">
-      <button
-        onClick={handleLike}
-        className={`icon-btn ${userVote === "like" ? "active" : ""}`}
-        aria-label="Like this post"
-      >
-        <i className="material-icons">thumb_up</i> {likes}
+    <div className="flex items-center gap-4 mt-4">
+      <button onClick={handleLike} className="flex items-center gap-1">
+        <ThumbsUp size={20} /> {likes}
       </button>
-      <button
-        onClick={handleDislike}
-        className={`icon-btn ${userVote === "dislike" ? "active" : ""}`}
-        aria-label="Dislike this post"
-      >
-        <i className="material-icons">thumb_down</i> {dislikes}
+      <button onClick={handleDislike} className="flex items-center gap-1">
+        <ThumbsDown size={20} /> {dislikes}
+      </button>
+      <button onClick={() => handleShare('twitter')} className="ml-auto flex items-center gap-1">
+        <Share2 size={20} /> Share
       </button>
     </div>
   );

@@ -10,6 +10,34 @@ const HomePage = () => {
   const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
 
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const res = await fetch("http://localhost:1337/api/blogs/");
+//       const json = await res.json();
+
+//       const blogs = json.data.map((item: any) => ({
+//         id: item.id,
+//         title: item.Title,
+//         slug: item.slug,
+//         author: "Unknown", // Strapi data doesn't include this — fill as needed
+//         category: "General", // Default or map if available
+//         content: item.content,
+//         tags: item.tags ?? [],
+//         isTrending: item.isTrending ?? false,
+//         readTime: item.readTime,
+//         createdAt: item.createdAt,
+//       }));
+
+//       setAllBlogs(blogs);
+//       setFilteredBlogs(blogs);
+//     } catch (error) {
+//       console.error("Failed to fetch blogs:", error);
+//     }
+//   };
+
+//   fetchData();
+// }, []);
   useEffect(() => {
     // Simulating async data fetch
     const fetchData = async () => {

@@ -13,8 +13,8 @@
     --border-color: #dee2e6;
     --danger-color: #dc3545;
     --success-color: #28a745;
-    --font-body: 'Inter', sans-serif;
-    --font-display: 'Lora', serif;
+    --font-body: 'Work Sans', sans-serif;
+    --font-display: 'Poppins', sans-serif;
     --container-width: 960px;
     --border-radius: 8px;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -212,8 +212,8 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    height: 4px;
-    background-color: var(--primary-color);
+    height: 6px;
+    background-color: #4CAF50;
     z-index: 101;
     transition: width 0.1s linear;
 }
@@ -414,4 +414,9 @@ body {
     .newsletter-input {
         flex-direction: column;
     }
+}
+
+
+a {
+    text-decoration: none;
 }
