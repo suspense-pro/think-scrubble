@@ -10,34 +10,34 @@ const HomePage = () => {
   const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
 
-// useEffect(() => {
-//   const fetchData = async () => {
-//     try {
-//       const res = await fetch("http://localhost:1337/api/blogs/");
-//       const json = await res.json();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch("http://localhost:1337/api/blogs/");
+  //       const json = await res.json();
 
-//       const blogs = json.data.map((item: any) => ({
-//         id: item.id,
-//         title: item.Title,
-//         slug: item.slug,
-//         author: "Unknown", // Strapi data doesn't include this — fill as needed
-//         category: "General", // Default or map if available
-//         content: item.content,
-//         tags: item.tags ?? [],
-//         isTrending: item.isTrending ?? false,
-//         readTime: item.readTime,
-//         createdAt: item.createdAt,
-//       }));
+  //       const blogs = json.data.map((item: any) => ({
+  //         id: item.id,
+  //         title: item.Title,
+  //         slug: item.slug,
+  //         author: "Unknown", // Strapi data doesn't include this — fill as needed
+  //         category: "General", // Default or map if available
+  //         content: item.content,
+  //         tags: item.tags ?? [],
+  //         isTrending: item.isTrending ?? false,
+  //         readTime: item.readTime,
+  //         createdAt: item.createdAt,
+  //       }));
 
-//       setAllBlogs(blogs);
-//       setFilteredBlogs(blogs);
-//     } catch (error) {
-//       console.error("Failed to fetch blogs:", error);
-//     }
-//   };
+  //       setAllBlogs(blogs);
+  //       setFilteredBlogs(blogs);
+  //     } catch (error) {
+  //       console.error("Failed to fetch blogs:", error);
+  //     }
+  //   };
 
-//   fetchData();
-// }, []);
+  //   fetchData();
+  // }, []);
   useEffect(() => {
     // Simulating async data fetch
     const fetchData = async () => {
@@ -71,9 +71,19 @@ const HomePage = () => {
 
   return (
     <>
-      <Header onSearch={handleSearch} />
+      <Header />
       <main className="main-content">
         <div className="container">
+          <div className="search-bar" style={{ margin: "2rem 0" }}>
+            <input
+              type="search"
+              placeholder="Search articles..."
+              className="search-input"
+              onChange={(e) => handleSearch(e.target.value)}
+              aria-label="Search articles"
+            />
+          </div>
+
           {trendingBlogs.length > 0 && (
             <section>
               <h2 className="section-title">Trending</h2>
