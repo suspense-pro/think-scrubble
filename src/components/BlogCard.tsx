@@ -1,32 +1,35 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Blog } from "../lib/data";
+import React from "react";
 
-interface BlogCardProps {
-  post: Blog;
-}
+type BlogCardProps = {
+  post: {
+    id: number;
+    title: string;
+    slug: string;
+    author: string;
+    category: string;
+    content: string;
+    tags: string[];
+    isTrending: boolean;
+    readTime: number;
+    createdAt?: string;
+    imageUrl?: string;
+  };
+};
 
 const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   return (
-    <Link href={`/blog/${post.slug}`}>
-      <div className="blog-card">
-        <Image
-          src={post.coverImage}
+    <div className="blog-card">
+      {post.imageUrl && (
+        <img
+          src={`http://localhost:1337${post.imageUrl}`}
           alt={post.title}
-          className="card-img"
-          width={400}
-          height={200}
-          style={{ objectFit: "cover" }}
+          className="blog-card-image"
+          style={{ width: "100%", height: "auto", borderRadius: "8px" }}
         />
-        <div className="card-content">
-          <span className="card-category">{post.category}</span>
-          <h2 className="card-title">{post.title}</h2>
-          <div className="card-footer">
-            <span>By {post.author}</span> · <span>{post.readTime} min read</span>
-          </div>
-        </div>
-      </div>
-    </Link>
+      )}
+      <h3>{post.title}</h3>
+      <p>By {post.author} | {post.readTime} min read</p>
+    </div>
   );
 };
 

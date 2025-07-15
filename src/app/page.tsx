@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import { dummyData, Blog } from "../lib/data";
+import { Blog } from "../lib/data";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import BlogCard from "../components/BlogCard";
@@ -10,41 +10,36 @@ const HomePage = () => {
   const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetch("http://localhost:1337/api/blogs/");
-  //       const json = await res.json();
-
-  //       const blogs = json.data.map((item: any) => ({
-  //         id: item.id,
-  //         title: item.Title,
-  //         slug: item.slug,
-  //         author: "Unknown", // Strapi data doesn't include this — fill as needed
-  //         category: "General", // Default or map if available
-  //         content: item.content,
-  //         tags: item.tags ?? [],
-  //         isTrending: item.isTrending ?? false,
-  //         readTime: item.readTime,
-  //         createdAt: item.createdAt,
-  //       }));
-
-  //       setAllBlogs(blogs);
-  //       setFilteredBlogs(blogs);
-  //     } catch (error) {
-  //       console.error("Failed to fetch blogs:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
   useEffect(() => {
-    // Simulating async data fetch
     const fetchData = async () => {
-      const blogs = dummyData.blogs;
-      setAllBlogs(blogs);
-      setFilteredBlogs(blogs);
+      try {
+        const res = await fetch("http://localhost:1337/api/blogs?populate=cover_image");
+        const json = await res.json();
+
+        const blogs = json.data.map((item: any) => ({
+          id: item.id,
+          title: item.Title,
+          slug: item.slug,
+          author: "Unknown",
+          category: "General",
+          content: item.content,
+          tags: item.tags ?? [],
+          isTrending: item.isTrending ?? false,
+          readTime: item.readTime,
+          createdAt: item.createdAt,
+          imageUrl:
+            item.cover_image?.formats?.medium?.url ||
+            item.cover_image?.url ||
+            "",
+        }));
+
+        setAllBlogs(blogs);
+        setFilteredBlogs(blogs);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      }
     };
+
     fetchData();
   }, []);
 
@@ -94,6 +89,7 @@ const HomePage = () => {
               </div>
             </section>
           )}
+
           <section style={{ marginTop: "3rem" }}>
             <h2 className="section-title">All Posts</h2>
             <div className="blog-grid">

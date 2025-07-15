@@ -1,0 +1,77 @@
+"use client";
+
+import React, { useState } from "react";
+import axios from "axios";
+import styles from "./login.module.scss";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+interface StrapiLoginResponse {
+  jwt: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+}
+
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    const router = useRouter();
+
+    e.preventDefault();
+    try {
+      const res = await axios.post<StrapiLoginResponse>(
+        "http://localhost:1337/api/auth/local",
+        {
+          identifier: email,
+          password,
+        }
+      );
+      localStorage.setItem("token", res.data.jwt);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      router.push("/");
+      setMessage(`Welcome, ${res.data.user.username}!`);
+    } catch (error: any) {
+      setMessage(error?.response?.data?.error?.message || "Login failed.");
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>Login</h2>
+      <form onSubmit={handleLogin} className={styles.form}>
+        <input
+          className={styles.input}
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          className={styles.input}
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button className={styles.button} type="submit">
+          Login
+        </button>
+      </form>
+      <p className={styles.message}>{message}</p>
+      <p className={styles.signup}>
+        Don't have an account? <Link href="/signup">Sign up here</Link>
+      </p>
+    </div>
+  );
+};
+
+export default Login;

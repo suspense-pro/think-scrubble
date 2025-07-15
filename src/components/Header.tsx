@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import React from "react";
 
@@ -13,13 +15,19 @@ const Header: React.FC = () => {
 
         <nav className="nav-links space-x-6 text-gray-700 font-medium">
           <Link href="/">
-            <span className="nav-link hover:text-blue-500 cursor-pointer">Home</span>
+            <span className="nav-link hover:text-blue-500 cursor-pointer">
+              Home
+            </span>
           </Link>
           <Link href="/about">
-            <span className="nav-link hover:text-blue-500 cursor-pointer">About</span>
+            <span className="nav-link hover:text-blue-500 cursor-pointer">
+              About
+            </span>
           </Link>
-          <Link href="/contact">
-            <span className="nav-link hover:text-blue-500 cursor-pointer">Contact</span>
+          <Link href={"/login"}>
+            <span className="nav-link hover:text-blue-500 cursor-pointer">
+              Sign In
+            </span>
           </Link>
         </nav>
       </div>
