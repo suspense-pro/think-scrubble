@@ -31,9 +31,9 @@ const Header: React.FC = () => {
               Home
             </span>
           </Link>
-          <Link href="/about">
+          <Link href="/bookmarks">
             <span className="nav-link hover:text-blue-500 cursor-pointer">
-              About
+              Bookmarks
             </span>
           </Link>
           {user ? (

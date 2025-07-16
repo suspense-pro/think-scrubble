@@ -13,7 +13,7 @@ const BookmarksPage = () => {
     const fetchBookmarks = async () => {
       try {
         const res = await fetch(
-          "http://localhost:1337/api/user-bookmarks?populate[blog][populate]=cover_image"
+          "http://localhost:1337/api/user-bookmarks?populate[blog][populate][0]=cover_image&populate[blog][populate][1]=blog_author"
         );
         const json = await res.json();
 
