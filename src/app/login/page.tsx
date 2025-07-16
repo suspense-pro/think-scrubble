@@ -20,10 +20,11 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    const router = useRouter();
+  const router = useRouter(); // ✅ HOOKS MUST BE HERE
 
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const res = await axios.post<StrapiLoginResponse>(
         "http://localhost:1337/api/auth/local",
@@ -32,11 +33,16 @@ const Login: React.FC = () => {
           password,
         }
       );
+
+      // ✅ Store user and token
       localStorage.setItem("token", res.data.jwt);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      router.push("/");
+      // ✅ Show welcome message
       setMessage(`Welcome, ${res.data.user.username}!`);
+
+      // ✅ Redirect to homepage
+      router.push("/");
     } catch (error: any) {
       setMessage(error?.response?.data?.error?.message || "Login failed.");
     }
@@ -62,11 +68,13 @@ const Login: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button className={styles.button} type="submit">
+        <button type="submit" className={styles.button}>
           Login
         </button>
       </form>
-      <p className={styles.message}>{message}</p>
+
+      {message && <p className={styles.message}>{message}</p>}
+
       <p className={styles.signup}>
         Don't have an account? <Link href="/signup">Sign up here</Link>
       </p>

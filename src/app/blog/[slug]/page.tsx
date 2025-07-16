@@ -1,29 +1,57 @@
-import { notFound } from 'next/navigation';
-import { dummyData } from '@/lib/data';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import BlogPageClient from './BlogPageClient';
-import { Metadata } from 'next';
+import axios from 'axios';
+import { useParams } from 'next/navigation';
 
-export async function generateStaticParams() {
-  return dummyData.blogs.map((blog) => ({ slug: blog.slug }));
-}
+const API_URL = 'http://localhost:1337';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = dummyData.blogs.find((b) => b.slug === params.slug);
-  if (!post) return {};
-  return {
-    title: `${post.title} | NextGen Blog`,
-    description: post.content.substring(3, 150),
-  };
-}
+const SingleBlogPage = () => {
+  const [post, setPost] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default async function BlogPage({ params }: { params: { slug: string } }) {
-  const post = dummyData.blogs.find((b) => b.slug === params.slug);
-  if (!post) return notFound();
+ const params = useParams();
+  const slug = params?.slug as string;
 
-  const allPosts = dummyData.blogs;
-  const initialComments = dummyData.comments.filter((c) => c.blogId === post.id);
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/api/blogs/${slug}?populate=*`);
+        const raw = res?.data?.data;
 
-  return (
-    <BlogPageClient post={post} allPosts={allPosts} initialComments={initialComments} />
-  );
-}
+        // Transform raw response into expected format
+        const transformedPost = {
+          comments: raw?.comments,
+          id: raw.id,
+          title: raw.Title,
+          slug: raw.slug,
+          content: raw.content,
+          readTime: raw.readTime,
+          coverImage: `${API_URL}${raw.cover_image?.formats?.medium?.url || raw.cover_image?.url}`,
+          category: raw.category?.name || 'Uncategorized',
+          author: raw.blog_author?.username || 'Unknown',
+          audioUrl: raw.audioVersion || null,
+          likes: raw.likes || 0,
+          dislikes: raw.dislikes || 0,
+          poll: null, // Fill this if your blog has poll data
+        };
+
+        setPost(transformedPost);
+      } catch (err) {
+        console.error('Error fetching blog:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [slug]);
+
+  if (loading) return <p>Loading blog...</p>;
+  if (!post) return <p>Blog not found.</p>;
+
+  return <BlogPageClient post={post} allPosts={[post]} initialComments={[]} />;
+};
+
+export default SingleBlogPage;

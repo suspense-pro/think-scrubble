@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import { Blog, Comment } from '@/lib/data';
-import Image from 'next/image';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import ReadingProgressBar from '@/components/ReadingProgressBar';
-import LikeDislike from '@/components/LikeDislike';
-import InlinePoll from '@/components/InlinePoll';
-import Comments from '@/components/Comments';
-import BlogCard from '@/components/BlogCard';
+import React, { useState, useMemo } from "react";
+import { Blog, Comment } from "@/lib/data";
+import Image from "next/image";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ReadingProgressBar from "@/components/ReadingProgressBar";
+import LikeDislike from "@/components/LikeDislike";
+import InlinePoll from "@/components/InlinePoll";
+import Comments from "@/components/Comments";
+import BlogCard from "@/components/BlogCard";
+import ReactMarkdown from "react-markdown";
 
 interface BlogPageClientProps {
   post: Blog;
@@ -17,35 +18,34 @@ interface BlogPageClientProps {
   initialComments: Comment[];
 }
 
-const BlogPageClient = ({ post, allPosts, initialComments }: BlogPageClientProps) => {
+const BlogPageClient = ({ post, initialComments }: BlogPageClientProps) => {
   const [isSaved, setIsSaved] = useState(false);
 
-  const relatedBlogs = useMemo(() => {
-    return allPosts.filter((p) => post.relatedBlogIds.includes(p.id));
-  }, [post, allPosts]);
-
-  const handleShare = (platform: 'twitter' | 'facebook' | 'linkedin') => {
+  const handleShare = (platform: "twitter" | "facebook" | "linkedin") => {
     const url = window.location.href;
     const text = `Check out this article: ${post.title}`;
-    let shareUrl = '';
+    let shareUrl = "";
     switch (platform) {
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+          url
+        )}&text=${encodeURIComponent(text)}`;
         break;
       // add other cases
     }
-    window.open(shareUrl, '_blank');
+    window.open(shareUrl, "_blank");
   };
 
   return (
     <>
-      <Header onSearch={() => {}} />
+      <Header />
       <main className="main-content">
         <ReadingProgressBar />
         <article className="container">
           <header className="post-header">
             <p className="post-meta">
-              <span>{post.category}</span> · <span>{post.readTime} min read</span>
+              <span>{post.category}</span> ·{" "}
+              <span>{post.readTime} min read</span>
             </p>
             <h1 className="post-title">{post.title}</h1>
             <p className="post-meta">By {post.author}</p>
@@ -58,7 +58,7 @@ const BlogPageClient = ({ post, allPosts, initialComments }: BlogPageClientProps
             width={960}
             height={500}
             priority
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: "cover" }}
           />
 
           <div className="post-toolbar">
@@ -69,22 +69,30 @@ const BlogPageClient = ({ post, allPosts, initialComments }: BlogPageClientProps
             <div className="audio-player">
               <i className="material-icons">volume_up</i>
               <span>Listen to audio version</span>
-              <audio controls src={post.audioUrl} style={{ marginLeft: 'auto' }}>
+              <audio
+                controls
+                src={post.audioUrl}
+                style={{ marginLeft: "auto" }}
+              >
                 Your browser does not support the audio element.
               </audio>
             </div>
           )}
 
-          <div
+          {/* <div
             className="post-content"
             dangerouslySetInnerHTML={{ __html: post.content }}
+          /> */}
+          <ReactMarkdown>{post.content}</ReactMarkdown>
+
+          {/* {post.poll && <InlinePoll pollData={post.poll} />} */}
+
+          <Comments
+            blogId={post.id}
+            initialComments={post?.comments || initialComments}
           />
 
-          {post.poll && <InlinePoll pollData={post.poll} />}
-
-          <Comments blogId={post.id} initialComments={initialComments} />
-
-          {relatedBlogs.length > 0 && (
+          {/* {relatedBlogs.length > 0 && (
             <section className="post-section">
               <h2 className="section-title">Related Blogs</h2>
               <div className="blog-grid">
@@ -93,7 +101,7 @@ const BlogPageClient = ({ post, allPosts, initialComments }: BlogPageClientProps
                 ))}
               </div>
             </section>
-          )}
+          )} */}
         </article>
       </main>
       <Footer />

@@ -22,8 +22,8 @@ export interface Blog {
   title: string;
   content: string;
   coverImage: string;
-  author: string;
-  category: string;
+  author: any;
+  category: any;
   tags: string[];
   readTime: number;
   likes: number;
@@ -32,14 +32,20 @@ export interface Blog {
   relatedBlogIds: number[];
   audioUrl: string | null;
   poll: Poll | null;
+  documentId?: string;
+  blog_author?: any;
+  comments?: any
 }
+
+
 
 export interface Comment {
   id: number;
   blogId: number;
   author: string;
-  body: string;
-  date: string;
+  date?: string;
+  content?: string;
+  publishedAt?: any;
 }
 
 interface DummyData {
@@ -135,12 +141,11 @@ export const dummyData: DummyData = {
     },
   ],
   comments: [
-    { id: 1, blogId: 1, author: "Mike", body: "Great article! AI in development is fascinating.", date: "2024-07-20" },
+    { id: 1, blogId: 1, author: "Mike", date: "2024-07-20" },
     {
       id: 2,
       blogId: 1,
       author: "Sarah",
-      body: "I'm already using Copilot and it's a huge time-saver.",
       date: "2024-07-21",
     },
   ],
